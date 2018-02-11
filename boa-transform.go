@@ -10,6 +10,7 @@ import (
 	"os"
 	"regexp"
 	"strings"
+	"time"
 )
 
 var recordLexer = lexer.Must(lexer.Regexp(
@@ -31,8 +32,11 @@ type Record struct {
 	Amount          string ` @Float`
 }
 
-func stripDescrip(rec *Record) {
+func fixupRecord(rec *Record) {
 	rec.Description = strings.TrimSpace(rec.Description)
+	year := fmt.Sprintf("%v", time.Now().Year())
+	rec.TransactionDate = year + "/" + rec.TransactionDate
+	rec.Amount = "-" + rec.Amount
 }
 
 func check(err error) {
@@ -47,6 +51,7 @@ func convertInputToRecords(r io.Reader) {
 	rec := &Record{}
 
 	scanner := bufio.NewScanner(r)
+	fmt.Println("date,description,amount")
 	for scanner.Scan() {
 		str := scanner.Text()
 		match, err := regexp.Match(`^\s+[0-9]{2}/[0-9]{2}`, []byte(str))
@@ -57,8 +62,9 @@ func convertInputToRecords(r io.Reader) {
 				fmt.Fprintln(os.Stderr, "ERROR: Failed to parse record, skipping")
 				fmt.Fprintln(os.Stderr, str)
 			} else {
-				stripDescrip(rec)
-				fmt.Printf("%+v\n", rec)
+				fixupRecord(rec)
+				fmt.Printf(`"%s","%s","%s"`+"\n", rec.TransactionDate, rec.Description, rec.Amount)
+
 			}
 		}
 	}
