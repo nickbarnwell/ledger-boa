@@ -54,7 +54,8 @@ func convertInputToRecords(r io.Reader) {
 		if match {
 			err := parser.ParseString(str, rec)
 			if err != nil {
-				fmt.Println("ERROR: Failed to parse record, skipping")
+				fmt.Fprintln(os.Stderr, "ERROR: Failed to parse record, skipping")
+				fmt.Fprintln(os.Stderr, str)
 			} else {
 				stripDescrip(rec)
 				fmt.Printf("%+v\n", rec)
