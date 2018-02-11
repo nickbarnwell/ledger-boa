@@ -1,0 +1,16 @@
+* Introduction
+  Ever wanted to parse the horrible plain-text statement BofA gives you the
+  option to download for your credit card statement? Now you can! Grab it from
+  the "Statements & Documents" tab of your CC account in the Online Banking
+  portal and either pass it to boa-transform via a pipe or give the filename as
+  the first argument to the executable.
+
+  Parseable records will be transformed into =hledger= CSV format and printed to
+  =stdin=, while errors will output to =stderr=.
+
+** Why?
+  I wrote this as an exercise in learning Golang; you should prefer the far more
+  robust CSV export that they also offer also offer:
+
+  [[https://www.dropbox.com/s/h1b6e9qa1szxcwk/Screenshot%25202018-02-11%252010.36.09.png?raw=1][BofA
+  Download link location]]
